@@ -22,6 +22,9 @@ from HTMLParser import HTMLParser
 def with_color(c, s):
     return "\x1b[%dm%s\x1b[0m" % (c, s)
 
+def join_with_script_dir(path):
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+
 
 class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
     address_family = socket.AF_INET6
@@ -37,10 +40,10 @@ class ThreadingHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 class ProxyRequestHandler(BaseHTTPRequestHandler):
-    cakey = 'ca.key'
-    cacert = 'ca.crt'
-    certkey = 'cert.key'
-    certdir = 'certs/'
+    cakey = join_with_script_dir('ca.key')
+    cacert = join_with_script_dir('ca.crt')
+    certkey = join_with_script_dir('cert.key')
+    certdir = join_with_script_dir('certs/')
     timeout = 5
     lock = threading.Lock()
 
