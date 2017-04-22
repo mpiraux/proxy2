@@ -173,7 +173,8 @@ class ProxyRequestHandler(BaseHTTPRequestHandler):
         except Exception as e:
             if origin in self.tls.conns:
                 del self.tls.conns[origin]
-            self.send_error(502)
+            if not self.error_handler(req, req_body, locals().get('res'), locals().get('res_body')):
+                self.send_error(502)
             return
 
         content_encoding = res.headers.get('Content-Encoding', 'identity')
@@ -361,10 +362,13 @@ class ProxyRequestHandler(BaseHTTPRequestHandler):
         pass
 
     def response_handler(self, req, req_body, res, res_body):
-        pass
+        print ('resp', req, req_body, res, res_body)
 
     def save_handler(self, req, req_body, res, res_body):
         self.print_info(req, req_body, res, res_body)
+
+    def error_handler(self, req, req_body, res, res_body):
+        pass
 
 
 def test(HandlerClass=ProxyRequestHandler, ServerClass=ThreadingHTTPServer, protocol="HTTP/1.1"):
